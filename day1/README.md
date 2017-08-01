@@ -93,7 +93,8 @@ tomcat ansible_port=22 ansible_host=192.168.56.10 ansible_connection=ssh ansible
 
     - name: Download Tomcat AS
       get_url:
-        url: http://archive.apache.org/dist/tomcat/tomcat-8/v{{tomcat_version}}/bin/apache-tomcat-{{tomcat_version}}.tar.gz
+        url: http://archive.apache.org/dist/tomcat/tomcat-8/v{{tomcat_version}}
+        /bin/apache-tomcat-{{tomcat_version}}.tar.gz
         dest: /home/vagrant/
 
     - name: Ensure /opt/tomcat/$version is present
@@ -113,7 +114,9 @@ tomcat ansible_port=22 ansible_host=192.168.56.10 ansible_connection=ssh ansible
         group: tomcat_as_group
 
     - name: Copy tomcat to (CATALINA_HOME)=/opt/tomcat/$version
-      shell: cp -R /home/vagrant/apache-tomcat-{{tomcat_version}}/* /opt/tomcat/{{tomcat_version}} && chown -R tomcat_as:tomcat_as_group /opt/tomcat/{{tomcat_version}}
+      shell: cp -R /home/vagrant/apache-tomcat-{{tomcat_version}}/* 
+      /opt/tomcat/{{tomcat_version}} && chown -R tomcat_as:tomcat_as_group 
+      /opt/tomcat/{{tomcat_version}}
 
     - name: Ensure tomcat.service script is present
       copy:
@@ -163,7 +166,8 @@ tomcat ansible_port=22 ansible_host=192.168.56.10 ansible_connection=ssh ansible
       shell: systemctl status tomcat.service | grep Active
 
     - name: Check http responce
-      shell: if [[ `curl -IL localhost:8080 | grep "HTTP/1.1 200"` > 0 ]]; then echo 'success'; else exit1; fi
+      shell: if [[ `curl -IL localhost:8080 | grep "HTTP/1.1 200"` > 0 ]]; 
+      then echo 'success'; else exit1; fi
 ```
 <img src="pics/5.jpg">
 <img src="pics/6.jpg">
