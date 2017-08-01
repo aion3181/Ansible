@@ -36,7 +36,8 @@
 [inventory](https://github.com/aion3181/Ansible/blob/master/day1/inventory)
 ```
 [all]
-tomcat ansible_port=22 ansible_host=192.168.56.10 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/tomcat/virtualbox/private_key
+tomcat ansible_port=22 ansible_host=192.168.56.10 ansible_connection=ssh ansible_user=vagrant 
+ansible_ssh_private_key_file=.vagrant/machines/tomcat/virtualbox/private_key
 ```
 
 ### Test ansible connectivity to the VM with ad-hoc command: $ ansible VM-name -i inventory -m setup
