@@ -39,4 +39,7 @@
 ##### Tomcat home page should be available on port 80 (accessible from Control Machile) via nginx.
 
 # Result:
+[Vagrantfile](https://github.com/aion3181/Ansible/blob/master/day1/Vagrantfile)
 
+  <img src="pics/1.jpg">
+  <img src="pics/2.jpg">
