@@ -83,7 +83,7 @@
     ansible_user=vagrant 
     ansible_ssh_private_key_file=.vagrant/machines/tomcat/virtualbox/private_key
 ```
-## ===================================================================
+## ===============================================================
 ## java role:
 ### [roles/java/defaults/main.yml:](https://github.com/aion3181/Ansible/blob/master/day2/roles/java/defaults/main.yml)
 ```
@@ -107,7 +107,7 @@
 ```
     java_version: java-1.7.0-openjdk-devel.x86_64
 ```
-## ===================================================================
+## ===============================================================
 ## java_test role:
 ### [roles/java_test/tasks/main.yml:](https://github.com/aion3181/Ansible/tree/master/day2/roles/java_test/tasks)
 ```
@@ -118,7 +118,7 @@
     - name: Show result
     debug: var=output4
 ```
-## ===================================================================
+## ===============================================================
 ## nginx role:
 ### [roles/nginx/handlers/main.yml:](https://github.com/aion3181/Ansible/blob/master/day2/roles/nginx/handlers/main.yml)
 ```
@@ -159,7 +159,7 @@
     - name: Show Nginx config
     debug: var=output2
 ```
-## ===================================================================
+## ===============================================================
 ## nginx_test role:
 ### [roles/nginx_test/meta/main.yml:](https://github.com/aion3181/Ansible/blob/master/day2/roles/nginx_test/meta/main.yml)
 ```
@@ -180,7 +180,7 @@
     shell: if [[ `curl localhost:80 | grep "Apache Tomcat/"` > 0 ]]; 
     then echo 'success'; else exit 1; fi
 ```
-## ===================================================================
+## ===============================================================
 ## tomcat role:
 ### [roles/tomcat/defaults/main.yml:](https://github.com/aion3181/Ansible/blob/master/day2/roles/tomcat/defaults/main.yml)
 ```
@@ -275,7 +275,7 @@
     tomcat_version: 8
     tomcat_release: 8.5.0
 ```
-## ===================================================================
+## ===============================================================
 ## tomcat_test role:
 ### [roles/tomcat_test/meta/main.yml:](https://github.com/aion3181/Ansible/blob/master/day2/roles/tomcat_test/meta/main.yml)
 ```
@@ -296,7 +296,7 @@
     shell: if [[ `curl localhost:8080 | grep "Apache Tomcat/"` > 0 ]]; 
     then echo 'success'; else exit 1; fi
 ```
-## ===================================================================
+## ===============================================================
 ## templates:
 ### [templates/nginx.conf.j2:](https://github.com/aion3181/Ansible/blob/master/day2/templates/nginx.conf.j2)
 ### [templates/tomcat.service.j2:](https://github.com/aion3181/Ansible/blob/master/day2/templates/tomcat.service.j2)
