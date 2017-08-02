@@ -1,0 +1,8 @@
+- name: Checking nginx service
+  shell: if [[ `systemctl is-active tomcat.service` -ne 'active' ]]; then exit 1; fi
+
+- name: Check nginx http responce
+  shell: if [[ `curl -IL localhost:80 | grep "HTTP/1.1 200"` > 0 ]]; then echo 'success'; else exit 1; fi  
+
+- name: Check nginx http proxy page
+  shell: if [[ `curl localhost:80 | grep "Apache Tomcat/"` > 0 ]]; then echo 'success'; else exit 1; fi

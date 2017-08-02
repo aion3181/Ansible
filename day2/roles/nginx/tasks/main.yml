@@ -1,0 +1,19 @@
+- name: Ensure nginx is installed     
+  yum:
+    name: nginx
+    state: present
+  notify: nginx_service
+
+- name: Ensure nginx config is updated
+  template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - nginx_restart
+
+- name: Nginx config
+  shell: cat /etc/nginx/nginx.conf
+  register: output2
+
+- name: Show Nginx config
+  debug: var=output2

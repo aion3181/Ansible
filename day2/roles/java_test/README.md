@@ -1,0 +1,1 @@
+### only checks that java installed and running properly

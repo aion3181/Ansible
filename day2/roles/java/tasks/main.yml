@@ -1,0 +1,11 @@
+- name: Ensure java is installed     
+  yum:
+    name: "{{java_version}}"
+    state: present
+
+- name: Java info
+  shell: java -version
+  register: output
+
+- name: Installed java version
+  debug: var=output

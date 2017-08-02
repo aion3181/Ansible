@@ -1,0 +1,1 @@
+### only checks that nginx installed and running properly
