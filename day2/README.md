@@ -39,7 +39,35 @@
 ##### Tomcat home page should be available on port 80 (accessible from Control Machile) via nginx.
 
 # Result:
-[Vagrantfile](https://github.com/aion3181/Ansible/blob/master/day1/Vagrantfile)
+### [Vagrantfile](https://github.com/aion3181/Ansible/blob/master/day2/Vagrantfile)
 
   <img src="pics/1.jpg">
   <img src="pics/2.jpg">
+  
+  
+### [site.yml](https://github.com/aion3181/Ansible/blob/master/day2/site.yml)
+```
+  - name: Ensuring connectivity to the host using ssh keys
+    hosts: tomcat
+
+    tasks:
+    - name: Host name
+      debug: var=ansible_hostname
+
+
+  - name: Installation
+    hosts: tomcat
+    become: true
+
+    roles:
+    - nginx
+
+
+  - name: Verification
+    hosts: tomcat
+
+    roles:
+  - nginx_test
+```
+
+
