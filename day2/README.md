@@ -7,7 +7,7 @@
 ###### Remote VM hostname/ip/port
 ###### Remote ssh login username
 ###### Connection type
-### Develop a playbook (name: site.yml) which is supposed to run against any host (specified in inventory)
+#### Develop a playbook (name: site.yml) which is supposed to run against any host (specified in inventory)
 #### Develop roles:
 ###### - java (installs java)
 ###### - java_test (does only checks that java installed and running properly)
@@ -15,12 +15,12 @@
 ###### - tomcat_test (does only checks that tomcat installed and running properly)
 ###### - nginx (installs nginx)
 ###### - nginx_test (does only checks that nginx installed and running properly)
-### Playbook should consist of 2 Plays:
+#### Playbook should consist of 2 Plays:
 ###### - Installation
 ###### - Verification
-## Use handlers to manage tomcat/nginx configuration changes
-## Use module debug to check configuration during the installation 
-### Define play/roles variables (at least):
+#### Use handlers to manage tomcat/nginx configuration changes
+#### Use module debug to check configuration during the installation 
+#### Define play/roles variables (at least):
 ###### - tomcat_version
 ###### - tomcat_home
 ###### - tomcat_user
