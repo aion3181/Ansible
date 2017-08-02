@@ -1,9 +1,9 @@
 # Lab Work Task. Web Server Provisioning
-## Review
-### Using Ansible v2.3.1 for provisioning nginx + tomcat application stack. 
-### Learning by doing.
+### Review
+#### Using Ansible v2.3.1 for provisioning nginx + tomcat application stack. 
+#### Learning by doing.
 ### Task
-###  Create ansible inventory file (name: inventory) with remote host connection details:
+####  Create ansible inventory file (name: inventory) with remote host connection details:
 ###### Remote VM hostname/ip/port
 ###### Remote ssh login username
 ###### Connection type
@@ -38,4 +38,5 @@
 ##### Use module template for management of nginx cofigs
 ##### Tomcat home page should be available on port 80 (accessible from Control Machile) via nginx.
 
-#Result:
+# Result:
+
