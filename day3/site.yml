@@ -1,0 +1,22 @@
+- name: Ensuring connectivity to the host using ssh keys
+  hosts: tomcat
+  
+  tasks:
+  - name: Host name
+    debug: var=ansible_hostname
+
+
+- name: Installation
+  hosts: tomcat
+  become: true
+  
+  roles:
+  - nginx
+
+
+- name: Verification
+  hosts: tomcat
+
+  roles:
+  - nginx_test
+

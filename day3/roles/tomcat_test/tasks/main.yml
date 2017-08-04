@@ -1,0 +1,8 @@
+- name: Checking tomcat service
+  shell: if [[ `systemctl is-active tomcat.service` -ne 'active' ]]; then exit 1; fi
+
+- name: Check tomcat http responce
+  shell: if [[ `curl -IL localhost:8080 | grep "HTTP/1.1 200"` > 0 ]]; then echo 'success'; else exit 1; fi  
+
+- name: Check tomcat http page
+  shell: if [[ `curl localhost:8080 | grep "Apache Tomcat/"` > 0 ]]; then echo 'success'; else exit 1; fi

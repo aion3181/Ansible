@@ -1,0 +1,1 @@
+### only checks that tomcat installed and running properly

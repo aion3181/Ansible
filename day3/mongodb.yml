@@ -1,0 +1,23 @@
+- hosts: localhost
+  connection: local
+
+  vars:
+    mongo_src:
+    - linux/mongodb-linux-x86_64-rhel70-debugsymbols-latest.tgz
+    - linux/mongodb-linux-x86_64-ubuntu1604-latest.tgz
+    - linux/mongodb-linux-x86_64-rhel70-debugsymbols-v3.4-latest.tgz
+    - linux/mongodb-linux-x86_64-suse11-debugsymbols-v3.4-latest.tgz
+    - linux/mongodb-linux-x86_64-suse11-3.4.7-rc0.tgz
+    - linux/mongodb-linux-x86_64-rhel62-3.4.7-rc0.tgz
+    - linux/mongodb-linux-x86_64-3.4.7-rc0.tgz
+    - linux/mongodb-linux-arm64-ubuntu1604-v3.4-latest.tgz
+    - linux/mongodb-linux-x86_64-suse12-latest.tgz
+    - linux/mongodb-linux-x86_64-rhel55-v3.2-latest.tgz
+    - linux/mongodb-linux-x86_64-rhel55-3.2.16.tgz
+    - linux/mongodb-linux-x86_64-rhel70-3.2.16.tgz
+
+  tasks:
+  - debug: msg={{ mongo_src | get_mongo_src("rhel", "7", "3.2" ) }}
+  - debug: msg={{ mongo_src | get_mongo_src("rhel", "6", "3.0" ) }}
+  - debug: msg={{ mongo_src | get_mongo_src("rhel", "7", "3.4" ) }}
+
