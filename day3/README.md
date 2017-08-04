@@ -39,3 +39,9 @@
 ### 5.4 Execute VM provisioning: ansible-playbook stack.yml -i localhost, -c local -vv 
 ### 5.5 If previous steps are done successfully, instructor will check report (pdf-file)
 ###  Feedback: report issues/problems you had during the development of playbook and time spent for development.
+
+# Results:
+### [filter_plugins/filter_plugins.py](https://github.com/aion3181/Ansible/blob/master/day3/filter_plugins/filter_plugins.py)
+### [mongodb.yml](https://github.com/aion3181/Ansible/blob/master/day3/mongodb.yml)
+### [library/vm_vagrant](https://github.com/aion3181/Ansible/blob/master/day3/library/vm_vagrant)
+### [stack.yml](https://github.com/aion3181/Ansible/blob/master/day3/stack.yml)
