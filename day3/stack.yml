@@ -5,6 +5,7 @@
   - name: Custom module start
     vm_vagrant:
       path: /home/student/cm/ansible/day-3
+#state: started, stopped, destroyed
       state: started
     register: out
 
