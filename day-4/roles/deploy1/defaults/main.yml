@@ -1,0 +1,4 @@
+war: "/home/student/cm/ansible/day-4/mnt-lab.war"
+url:  http://192.168.56.10
+depuser: "admin"
+deppass: "admin" 

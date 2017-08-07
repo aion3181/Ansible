@@ -1,0 +1,6 @@
+war: "target/mnt-exam.war"
+url:  http://192.168.56.10
+depuser: "admin"
+deppass: "admin" 
+tomcat_user: tomcat_as
+tomcat_group: tomcat_as_group

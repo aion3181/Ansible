@@ -1,0 +1,54 @@
+- name: Start vm
+  hosts: localhost
+  tasks:
+    - name: Custom module start
+      vm_vagrant:
+        path: /home/student/cm/ansible/day-4
+#state: started, stopped, destroyed
+        state: started
+      register: out
+
+- name: Add manager console to tomcat
+  hosts: tomcat
+  become: true
+  
+  vars:
+    depuser: "admin"
+    deppass: "admin"
+
+  roles:
+  - nginx
+  - nginx_test    
+
+  tasks:
+    - include_vars: /home/student/cm/ansible/day-3/roles/tomcat/vars/main.yml
+    - name: add manager user to tomcat
+      template:
+        src: templates/tomcat-users.j2
+        dest: "{{tomcat_home}}{{tomcat_name}}/conf/tomcat-users.xml"
+        owner: "{{tomcat_user}}"
+        group: "{{tomcat_group}}"
+    - name: tomcat_restart
+      service:
+        name: tomcat
+        state: restarted
+
+    - name: tomcat_service
+      service:
+        name: tomcat
+        state: started
+
+- name: dep our war
+  hosts: localhost
+
+  tasks:
+  - debug: msg="{{output}}" 
+
+  roles:
+    - deploy1
+  
+ 
+
+
+
+    

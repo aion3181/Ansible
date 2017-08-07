@@ -1,0 +1,37 @@
+- name: deploying  
+  war_deploy:
+    url: "{{url}}" 
+    war: "{{war}}"
+    user: "{{depuser}}"
+    pass: "{{deppass}}"
+  register: output
+
+- name: getting date
+  shell: date
+  register: outdep1
+
+- name: getting user
+  shell: whoami
+  register: outdep2
+
+- include_vars: /home/student/cm/ansible/day-3/roles/tomcat/vars/main.yml
+- name: ensure folder /var/lib/tomcat/webapps/ exists
+  file:
+    path: /var/lib/tomcat/webapps/
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    state: directory
+    mode: 0755
+  become: true
+  delegate_to: 192.168.56.10  
+
+- name: updating deploy.txt
+  template:
+    src: templates/deploy.j2
+    dest: /var/lib/tomcat/webapps/deploy-info.txt 
+  when: output.deployed  == "ok"
+  become: true
+  delegate_to: 192.168.56.10
+
+- name: Check deployed war http responce
+  shell: if [[ `curl -IL http://192.168.56.10/mnt-lab | grep "HTTP/1.1 200"` > 0 ]]; then echo 'success'; else exit 1; fi    

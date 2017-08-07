@@ -1,0 +1,62 @@
+- include: createvm.yml
+
+- name: Add host
+  hosts: localhost
+  
+  tasks:
+  - add_host:
+      name: "{{out.IP}}"
+      groups: just_created
+      ansible_port: "{{out.port}}"
+      ansible_connection: ssh
+      ansible_user: "{{out.username}}"
+      ansible_ssh_private_key_file: "{{out.ssh_key_file}}"
+    when: out.status == "running"
+
+- name: Ensure Application deployed
+  hosts: just_created
+  
+  tasks:
+  - include_vars: roles/tomcat/vars/main.yml
+
+  - name: Jenkins vars lookup      
+    command: echo "{{ lookup('env','JOB_NAME') }}"      
+    register: jenkins_job
+
+  - name: getting date
+    shell: date
+    register: outdep1
+
+  - name: ensure folder /var/lib/tomcat/webapps/ exists
+    file:
+      path: /var/lib/tomcat/webapps/
+      owner: "{{tomcat_user}}"
+      group: "{{tomcat_group}}"
+      state: directory
+      mode: 0755
+    become: true
+
+  - name: updating deploy.txt
+    template:
+      src: templates/deploy.j2
+      dest: /var/lib/tomcat/webapps/deploy-info.txt 
+    become: true
+
+- name: Ensure Application deployed
+  hosts: localhost
+  vars:
+    war: "mnt-exam"
+  tasks:
+  - name: Check deployed war http responce
+    shell: if [[ `curl -IL http://{{out.IP}}/{{war}} | grep "HTTP/1.1 200"` > 0 ]]; then echo 'success'; else exit 1; fi
+
+- name: Ensure Vagrant Vm destroyed
+  hosts: localhost
+  
+  tasks:
+  - name: Custom module start
+    vm_vagrant:
+      path: /home/student/cm/ansible/day-3
+#state: started, stopped, destroyed
+      state: destroyed
+    register: out

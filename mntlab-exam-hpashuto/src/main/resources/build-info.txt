@@ -1,0 +1,8 @@
+Build time:
+Mon Aug  7 19:18:17 +03 2017
+Build Machine Name:
+epbyminw2033.minsk.epam.com
+Build User Name: Henadzi_Pashuto
+GIT URL: git.epam.com:siarhei_beliakou/mntlab-exam.git
+GIT Commit: XXX
+Branch: hpashuto

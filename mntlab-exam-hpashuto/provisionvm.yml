@@ -1,0 +1,29 @@
+- include: createvm.yml
+
+- name: Add host
+  hosts: localhost
+  
+  tasks:
+  - add_host:
+      name: "{{out.IP}}"
+      groups: just_created
+      ansible_port: "{{out.port}}"
+      ansible_connection: ssh
+      ansible_user: "{{out.username}}"
+      ansible_ssh_private_key_file: "{{out.ssh_key_file}}"
+    when: out.status == "running"
+
+- name: Installation
+  hosts: just_created
+  become: true
+  
+  roles:
+  - nginx
+
+
+- name: Verification
+  hosts: just_created
+
+  roles:
+  - nginx_test
+

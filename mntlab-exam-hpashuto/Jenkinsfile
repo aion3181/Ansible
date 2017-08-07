@@ -1,0 +1,63 @@
+node("${env.SLAVE}") {
+
+  stage("Build"){
+    git branch: 'hpashuto', url: 'git@git.epam.com:siarhei_beliakou/mntlab-exam.git'
+    sh "echo Build time: > src/main/resources/build-info.txt"
+    sh "date >> src/main/resources/build-info.txt"
+    sh "echo Build Machine Name: ${env.SLAVE} >> src/main/resources/build-info.txt" 
+    sh "echo Build User Name: Henadzi_Pashuto >> src/main/resources/build-info.txt" 
+    sh "echo GIT URL: `git config --get remote.origin.url` >> src/main/resources/build-info.txt "
+    sh "echo GIT Commit: `git rev-parse HEAD` >> src/main/resources/build-info.txt "
+    sh "echo Branch: `git rev-parse --abbrev-ref HEAD` >> src/main/resources/build-info.txt "
+    sh "cat src/main/resources/build-info.txt"
+    sh "mvn clean package -DbuildNumber=$BUILD_NUMBER"	
+    sh "echo build artefact"
+  }
+
+  stage("Package"){
+    sh 'tar -cvzf mnt-exam.war.tar.gz target/mnt-exam.war'
+    sh 'ls -la'
+    sh "echo package artefact"
+  }
+
+  stage("Roll out Dev VM"){
+    sh "cat createvm.yml"
+    withEnv([ "ANSIBLE_FORCE_COLOR=true", "PYTHONUNBUFFERED=1"]) {
+    ansiColor('xterm') {
+    sh "export ANSIBLE_FORCE_COLOR=true; nohup ansible-playbook createvm.yml -i localhost, -c local -vv"
+  }
+  }
+    sh "echo ansible-playbook createvm.yml ..."
+  }
+
+  stage("Provision VM"){
+    sh "cat provisionvm.yml"
+    withEnv([ "ANSIBLE_FORCE_COLOR=true", "PYTHONUNBUFFERED=1"]) {
+    ansiColor('xterm') {
+    sh "export ANSIBLE_FORCE_COLOR=true; ansible-playbook provisionvm.yml -i localhost, -c local -vv"
+  }
+  }
+    sh "echo ansible-playbook provisionvm.yml ..."
+  }
+
+  stage("Deploy Artefact"){
+    sh "cat deploy.yml"
+    withEnv([ "ANSIBLE_FORCE_COLOR=true", "PYTHONUNBUFFERED=1"]) {
+    ansiColor('xterm') {
+    sh "export ANSIBLE_FORCE_COLOR=true; ansible-playbook deploy.yml -e war=target/mnt-exam.war -i localhost, -c local -vv"
+  }
+  }
+  }
+
+  stage("Test Artefact is deployed successfully"){
+    sh "cat application_tests.yml"
+    withEnv([ "ANSIBLE_FORCE_COLOR=true", "PYTHONUNBUFFERED=1"]) {
+    ansiColor('xterm') {
+    sh "export ANSIBLE_FORCE_COLOR=true; ansible-playbook application_tests.yml -e war=mnt-exam -i localhost, -c local -vv"
+  }
+  }
+    sh "echo ansible-playbook application_tests.yml -e artefact=... ..."
+    deleteDir()
+  }
+}
+

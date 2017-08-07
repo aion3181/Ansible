@@ -1,0 +1,152 @@
+#!/bin/bash
+
+
+function status_VM
+	{
+if [[ `vagrant status | grep "running (virtualbox)"` > 0 ]]; then
+	status="running"
+elif [[ `vagrant status | grep "poweroff (virtualbox)"` > 0 ]]; then
+	status="stopped"
+elif [[ `vagrant status | grep "not created (virtualbox)"` > 0 ]]; then
+	status="not created"
+else
+	status="Unexpected error"
+fi
+	}
+
+
+
+function start_VM
+	{
+	status_VM
+	if [[ $status != "running" ]]; then
+		a=$(vagrant up)
+		changed="true"
+		status_VM
+		msg="Started"
+		if [[ $status -ne "running" ]]; then
+			msg="failed: Something goes wrong on running stage"
+		fi
+	else
+		msg="Already started"
+		status_VM
+	fi		
+	}
+
+
+function stop_VM
+	{
+	status_VM
+	if [[ $status != "stopped" ]]; then
+		start_VM
+		a=$(vagrant halt)
+		changed="true"
+		status_VM
+		msg="Stopped"
+		if [[ $status != "stopped" ]]; then
+			msg="failed: Something goes wrong on stopping stage"
+		fi
+	else
+		msg="Already stopped"
+		status_VM
+	fi
+	}
+
+
+function destroy_VM
+	{
+	stop_VM
+	status_VM
+	if [[ $status != "not created" ]]; then
+		a=$(vagrant destroy -f)
+		changed="true"
+		status_VM
+		msg="VM destroyed"
+		if [[ $status != "not created" ]]; then
+			msg="failed: Something goes wrong on destroying stage"
+		fi
+	else
+		msg="There is no VM"
+		status_VM
+	fi
+	}
+
+### default output ###
+
+changed="false"
+msg=""
+status=""
+
+###########################
+
+### Check arguments #######
+source $1
+ 
+if [ -z "$path" ]; then
+     printf '{"failed": true, "msg": "missing required arguments: path"}'
+     exit 1
+fi
+if [ -z "$state" ]; then
+     printf '{"failed": true, "msg": "missing required arguments: state"}'
+     exit 1
+fi
+##########################
+
+### Check if Vagrantfile exist ###
+b=`basename $path`
+
+if [[ $b -ne "Vagrantfile" ]]; then
+	vagrantfolder=$path
+	path="$path/Vagrantfile"
+else
+	vagrantfolder=`dirname $path`
+fi
+if [[ ! -f $path ]]; then
+	printf '{"failed": "true", "path": '$path', "msg": "missing Vagrantfile"}'
+    exit 1
+fi
+cd $vagrantfolder
+############################
+
+#### Return values #########
+# ip address, port
+ip_ad=`cat Vagrantfile | grep ip: | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"`
+port=22
+# path to ssh key file
+if [[ `cat Vagrantfile | grep config.vm.define` > 0 ]]; then
+	vmn=`cat Vagrantfile | grep config.vm.define | grep -oE "\"[a-A]+\""`
+	vmn=${vmn:1:-1}	
+	ssh_key_file="${vagrantfolder}/.vagrant/machines/${vmn}/virtualbox/private_key"
+else
+	ssh_key_file="${vagrantfolder}/.vagrant/machines/default/virtualbox/private_key"
+fi	
+# username to connect to VM
+username="vagrant"
+# os_name
+os_name=$(basename `cat Vagrantfile | grep vm.box_url | grep -oE "\".+\""`)
+os_name=${os_name:0:-1}
+# RAM size
+RAM=`cat Vagrantfile | grep vb.memory | grep -oE "\b([0-9]){4}\b"`
+
+###########################
+
+case $state in
+    started)
+        start_VM
+        ;;
+    stopped)
+        stop_VM
+        ;;
+    destroyed)
+		stop_VM
+        destroy_VM
+        ;;
+    *)
+       printf '{"failed": true, "msg": "invalid state: %s"}' "$state"
+        exit 1
+        ;;
+esac
+
+printf '{"changed": "%s", "msg": "%s", "status": "%s", "username": "%s", "RAM": "%b", "IP": "%s", "port": "%s", "ssh_key_file": "%s", "os_name": "%s"}' "$changed" "$msg" "$status" "$username" "$RAM" "$ip_ad" "$port" "$ssh_key_file" "$os_name"
+
+exit 0

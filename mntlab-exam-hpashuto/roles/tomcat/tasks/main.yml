@@ -1,0 +1,62 @@
+- name: Ensure tomcat_group exist
+  group:
+    name: "{{tomcat_group}}"
+    state: present        
+
+- name: Ensure tomcat_user exist
+  user:
+    name: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    state: present
+
+- name: Download Tomcat AS
+  get_url:
+    url: "{{tomcat_url}}"
+    dest: /home/vagrant/
+
+- name: Ensure CATALINA_HOME is present
+  file:
+    path: "{{tomcat_home}}"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+    state: directory
+    mode: 0755
+
+- name: Ensure tomcat is unarchived
+  unarchive:
+    remote_src: yes
+    src: /home/vagrant/{{tomcat_name}}.tar.gz
+    dest: "{{tomcat_home}}"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+
+- name: Ensure owner of tomcat files is "{{tomcat_user}}"
+  shell: chown -R "{{tomcat_user}}":{{tomcat_group}} {{tomcat_home}}{{tomcat_name}}
+
+- name: add manager user to tomcat
+  template:
+    src: templates/tomcat-users.j2
+    dest: "{{tomcat_home}}{{tomcat_name}}/conf/tomcat-users.xml"
+    owner: "{{tomcat_user}}"
+    group: "{{tomcat_group}}"
+
+- name: Ensure tomcat.service script is present
+  template:
+    src: templates/tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+  notify:
+    - systemd_service 
+    - tomcat_service
+
+- name: tomcat.service config
+  shell: cat /etc/systemd/system/tomcat.service
+  register: output3
+
+- name: Show tomcat.service config
+  debug: var=output3
+
+- name: force all notified handlers to run at this point, not waiting for normal sync points 
+  meta: flush_handlers
+  
+- name: Checking if tomcet.service is active
+  shell: if [[ `systemctl is-active tomcat.service` -ne 'active' ]]; then exit 1; fi 

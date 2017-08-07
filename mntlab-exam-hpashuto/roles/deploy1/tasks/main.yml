@@ -1,0 +1,15 @@
+- name: deploying  
+  war_deploy:
+    url: "{{url}}" 
+    war: "{{war}}"
+    user: "{{depuser}}"
+    pass: "{{deppass}}"
+  register: output
+
+- name: getting date
+  shell: date
+  register: outdep1
+
+- name: getting user
+  shell: whoami
+  register: outdep2   

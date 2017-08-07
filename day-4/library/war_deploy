@@ -1,0 +1,38 @@
+#!/bin/bash
+
+### Check arguments #######
+source $1
+ 
+if [ -z "$url" ]; then
+     printf '{"failed": true, "msg": "missing required arguments: url"}'
+     exit 1
+fi
+if [ -z "$war" ]; then
+     printf '{"failed": true, "msg": "missing required arguments: war"}'
+     exit 1
+fi
+if [ -z "$user" ]; then
+     printf '{"failed": true, "msg": "missing required arguments: user"}'
+     exit 1
+fi
+if [ -z "$pass" ]; then
+     printf '{"failed": true, "msg": "missing required arguments: pass"}'
+     exit 1
+fi
+##########################
+if [[ ! -f $war ]]; then
+msg="no such file"
+deployed="0"
+else
+msg=$(curl -s --upload-file "${war}" -u "${user}":"${pass}" "${url}/manager/text/deploy?path=/mnt-lab&update=true" 2>&1)
+deployed="1"
+if [[ $msg == "OK - Deployed application at context path /mnt-lab" ]]; then
+deployed="ok"
+fi
+fi
+
+###########################
+
+printf '{"msg": "%s", "deployed": "%b"}' "$msg" "$deployed"
+
+exit 0

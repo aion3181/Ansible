@@ -1,0 +1,20 @@
+- include: createvm.yml
+
+- name: dep our war
+  hosts: localhost
+
+  vars:
+    depuser: "admin"
+    deppass: "admin"
+
+  tasks:
+  - debug: msg="{{output}}" 
+
+  roles:
+    - deploy1
+  
+ 
+
+
+
+    

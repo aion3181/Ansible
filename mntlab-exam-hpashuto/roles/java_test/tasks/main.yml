@@ -1,0 +1,6 @@
+- name: Checking java installation
+  shell: java -version
+  register: output4
+
+- name: Show result
+  debug: var=output4
